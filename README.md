@@ -11,7 +11,7 @@ El sitio permitirá a los clientes explorar el catálogo completo de productos o
 
 ## Integrantes del equipo
 - Jeremy Acuña Murillo
-- 
+- Jerian Ulloa Solano
 -
 -
 
