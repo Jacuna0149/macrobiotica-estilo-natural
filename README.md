@@ -11,9 +11,9 @@ El sitio permitirá a los clientes explorar el catálogo completo de productos o
 
 ## Integrantes del equipo
 - Jeremy Acuña Murillo
+- Ignacio Marín Quesada
+- José Orozco Hernández
 - Jerian Ulloa Solano
--
--
 
 ## Acuerdo de trabajo por ramas
 
