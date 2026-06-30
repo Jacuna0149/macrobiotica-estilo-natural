@@ -1,14 +1,27 @@
 import { useEffect, useState } from "react";
 import { obtenerCategorias, obtenerProductos } from "../api/catalog";
+import { agregarAlCarrito } from "../api/cart";
 
 const colones = (n) => "₡" + Number(n).toLocaleString("es-CR");
 
-export default function CatalogPage() {
+export default function CatalogPage({ onAgregar }) {
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
   const [filtro, setFiltro] = useState(null); // null = "Todos"
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
+  const [agregadoId, setAgregadoId] = useState(null);
+
+  async function anadir(producto) {
+    try {
+      const carrito = await agregarAlCarrito(producto.id, 1);
+      onAgregar?.(carrito);
+      setAgregadoId(producto.id);
+      setTimeout(() => setAgregadoId((id) => (id === producto.id ? null : id)), 1500);
+    } catch (e) {
+      setError(e.message);
+    }
+  }
 
   useEffect(() => {
     obtenerCategorias()
@@ -117,9 +130,10 @@ export default function CatalogPage() {
                 <button
                   type="button"
                   disabled={p.stock === 0}
+                  onClick={() => anadir(p)}
                   className="mt-4 w-full rounded-lg bg-green-800 px-3 py-2 text-sm font-semibold text-white transition hover:bg-green-900 disabled:opacity-50"
                 >
-                  Añadir
+                  {agregadoId === p.id ? "Añadido ✓" : "Añadir"}
                 </button>
               </div>
             </article>
