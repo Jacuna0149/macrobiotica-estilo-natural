@@ -35,3 +35,21 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 
 CREATE INDEX IF NOT EXISTS idx_productos_categoria ON productos (categoria_id);
+
+-- Historia de usuario 3: carrito de compras (un carrito por usuario)
+CREATE TABLE IF NOT EXISTS carritos (
+  id             SERIAL PRIMARY KEY,
+  usuario_id     INTEGER NOT NULL UNIQUE REFERENCES usuarios (id) ON DELETE CASCADE,
+  creado_en      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  actualizado_en TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS carrito_items (
+  id          SERIAL PRIMARY KEY,
+  carrito_id  INTEGER NOT NULL REFERENCES carritos (id) ON DELETE CASCADE,
+  producto_id INTEGER NOT NULL REFERENCES productos (id) ON DELETE CASCADE,
+  cantidad    INTEGER NOT NULL DEFAULT 1 CHECK (cantidad > 0),
+  UNIQUE (carrito_id, producto_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_carrito_items_carrito ON carrito_items (carrito_id);
