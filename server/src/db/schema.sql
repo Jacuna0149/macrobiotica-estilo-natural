@@ -53,3 +53,38 @@ CREATE TABLE IF NOT EXISTS carrito_items (
 );
 
 CREATE INDEX IF NOT EXISTS idx_carrito_items_carrito ON carrito_items (carrito_id);
+
+-- Historia de usuario 4: pedidos (checkout)
+CREATE TABLE IF NOT EXISTS pedidos (
+  id           SERIAL PRIMARY KEY,
+  usuario_id   INTEGER REFERENCES usuarios (id) ON DELETE SET NULL,
+  -- Dirección de envío
+  nombre_envio VARCHAR(200) NOT NULL,
+  provincia    VARCHAR(100) NOT NULL,
+  canton       VARCHAR(100) NOT NULL,
+  direccion    TEXT         NOT NULL,
+  -- Pago (simulado)
+  metodo_pago  VARCHAR(30)  NOT NULL
+               CHECK (metodo_pago IN ('tarjeta', 'sinpe', 'efectivo')),
+  -- Montos
+  subtotal     NUMERIC(10, 2) NOT NULL,
+  envio        NUMERIC(10, 2) NOT NULL,
+  impuesto     NUMERIC(10, 2) NOT NULL,
+  total        NUMERIC(10, 2) NOT NULL,
+  estado       VARCHAR(20)  NOT NULL DEFAULT 'pendiente'
+               CHECK (estado IN ('pendiente', 'preparando', 'enviado', 'entregado', 'cancelado')),
+  creado_en    TIMESTAMPTZ  NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS pedido_items (
+  id              SERIAL PRIMARY KEY,
+  pedido_id       INTEGER NOT NULL REFERENCES pedidos (id) ON DELETE CASCADE,
+  producto_id     INTEGER REFERENCES productos (id) ON DELETE SET NULL,
+  nombre_producto VARCHAR(150)  NOT NULL,        -- snapshot del nombre al comprar
+  precio_unitario NUMERIC(10, 2) NOT NULL,       -- snapshot del precio al comprar
+  cantidad        INTEGER       NOT NULL CHECK (cantidad > 0),
+  subtotal        NUMERIC(10, 2) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_pedidos_usuario ON pedidos (usuario_id);
+CREATE INDEX IF NOT EXISTS idx_pedido_items_pedido ON pedido_items (pedido_id);
