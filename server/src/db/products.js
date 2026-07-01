@@ -1,0 +1,42 @@
+import { pool } from "./pool.js";
+
+// Lista todas las categorías ordenadas por nombre
+export async function listarCategorias() {
+  const { rows } = await pool.query(
+    `SELECT id, nombre, descripcion FROM categorias ORDER BY nombre`
+  );
+  return rows;
+}
+
+// Lista productos activos, opcionalmente filtrados por categoría
+export async function listarProductos({ categoriaId } = {}) {
+  const params = [];
+  let filtro = "WHERE p.activo = true";
+  if (categoriaId) {
+    params.push(categoriaId);
+    filtro += ` AND p.categoria_id = $${params.length}`;
+  }
+  const { rows } = await pool.query(
+    `SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.imagen_url,
+            p.categoria_id, c.nombre AS categoria
+     FROM productos p
+     LEFT JOIN categorias c ON c.id = p.categoria_id
+     ${filtro}
+     ORDER BY p.nombre`,
+    params
+  );
+  return rows;
+}
+
+// Obtiene un producto activo por id (o null si no existe)
+export async function obtenerProducto(id) {
+  const { rows } = await pool.query(
+    `SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.imagen_url,
+            p.categoria_id, c.nombre AS categoria
+     FROM productos p
+     LEFT JOIN categorias c ON c.id = p.categoria_id
+     WHERE p.id = $1 AND p.activo = true`,
+    [id]
+  );
+  return rows[0] || null;
+}

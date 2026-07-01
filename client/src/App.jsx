@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AuthPage from "./pages/AuthPage";
+import CatalogPage from "./pages/CatalogPage";
 import { obtenerPerfil } from "./api/auth";
 
 function App() {
@@ -36,21 +37,24 @@ function App() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-green-50 text-green-900">
-      <h1 className="text-3xl font-semibold">
-        ¡Hola, {usuario.nombre}!
-      </h1>
-      <p className="mt-2 text-green-700">
-        Sesión iniciada como <span className="font-mono">{usuario.email}</span> (rol: {usuario.rol})
-      </p>
-      <button
-        type="button"
-        onClick={cerrarSesion}
-        className="mt-6 rounded-lg border border-green-700 px-4 py-2 text-sm font-semibold text-green-800 transition hover:bg-green-100"
-      >
-        Cerrar sesión
-      </button>
-    </main>
+    <div className="min-h-screen bg-green-50">
+      <header className="flex items-center justify-between bg-white px-6 py-4 shadow-sm">
+        <h1 className="text-lg font-semibold text-green-900">
+          Macrobiótica Estilo Natural
+        </h1>
+        <div className="flex items-center gap-4 text-sm">
+          <span className="text-green-700">Hola, {usuario.nombre}</span>
+          <button
+            type="button"
+            onClick={cerrarSesion}
+            className="rounded-lg border border-green-700 px-3 py-1.5 font-semibold text-green-800 transition hover:bg-green-100"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </header>
+      <CatalogPage />
+    </div>
   );
 }
 
