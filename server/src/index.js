@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./auth/routes.js";
+import catalogRoutes from "./catalog/routes.js";
+import cartRoutes from "./cart/routes.js";
+import orderRoutes from "./orders/routes.js";
 
 dotenv.config();
 
@@ -18,6 +21,15 @@ app.get("/api/health", (req, res) => {
 
 // Autenticación: registro, login y perfil
 app.use("/api/auth", authRoutes);
+
+// Catálogo: categorías y productos
+app.use("/api", catalogRoutes);
+
+// Carrito de compras (requiere autenticación)
+app.use("/api/carrito", cartRoutes);
+
+// Pedidos / checkout (requiere autenticación)
+app.use("/api/pedidos", orderRoutes);
 
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {
