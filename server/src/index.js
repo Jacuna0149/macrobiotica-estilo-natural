@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./auth/routes.js";
 import catalogRoutes from "./catalog/routes.js";
+import cartRoutes from "./cart/routes.js";
 
 dotenv.config();
 
@@ -22,6 +23,9 @@ app.use("/api/auth", authRoutes);
 
 // Catálogo: categorías y productos
 app.use("/api", catalogRoutes);
+
+// Carrito de compras (requiere autenticación)
+app.use("/api/carrito", cartRoutes);
 
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {
