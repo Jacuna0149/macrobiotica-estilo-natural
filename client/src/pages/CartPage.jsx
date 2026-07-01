@@ -3,7 +3,7 @@ import { obtenerCarrito, actualizarCantidad, eliminarDelCarrito } from "../api/c
 
 const colones = (n) => "₡" + Number(n).toLocaleString("es-CR");
 
-export default function CartPage({ onCambio, onSeguirComprando }) {
+export default function CartPage({ onCambio, onSeguirComprando, onContinuar }) {
   const [carrito, setCarrito] = useState({ items: [], total: 0 });
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -114,6 +114,14 @@ export default function CartPage({ onCambio, onSeguirComprando }) {
             <span className="text-lg">Total</span>
             <span className="text-2xl font-semibold">{colones(carrito.total)}</span>
           </div>
+
+          <button
+            type="button"
+            onClick={onContinuar}
+            className="mt-4 w-full rounded-lg bg-green-800 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-900"
+          >
+            Continuar al pago
+          </button>
         </>
       )}
     </section>

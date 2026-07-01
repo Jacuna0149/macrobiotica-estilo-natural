@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import AuthPage from "./pages/AuthPage";
 import CatalogPage from "./pages/CatalogPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
 import { obtenerPerfil } from "./api/auth";
 import { obtenerCarrito } from "./api/cart";
 
+const colones = (n) => "₡" + Number(n).toLocaleString("es-CR");
 const contarItems = (carrito) =>
   (carrito?.items || []).reduce((acc, i) => acc + i.cantidad, 0);
 
 function App() {
   const [usuario, setUsuario] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [vista, setVista] = useState("catalogo"); // "catalogo" | "carrito"
+  const [vista, setVista] = useState("catalogo"); // catalogo | carrito | checkout | confirmacion
   const [contador, setContador] = useState(0);
+  const [pedido, setPedido] = useState(null);
 
   // Al cargar, intenta restaurar la sesión desde el token guardado
   useEffect(() => {
@@ -45,10 +48,17 @@ function App() {
     setUsuario(null);
     setVista("catalogo");
     setContador(0);
+    setPedido(null);
   }
 
   function actualizarCarrito(carrito) {
     setContador(contarItems(carrito));
+  }
+
+  function confirmarPedido(nuevoPedido) {
+    setPedido(nuevoPedido);
+    setContador(0);
+    setVista("confirmacion");
   }
 
   if (cargando) return null;
@@ -86,13 +96,46 @@ function App() {
         </nav>
       </header>
 
-      {vista === "catalogo" ? (
-        <CatalogPage onAgregar={actualizarCarrito} />
-      ) : (
+      {vista === "catalogo" && <CatalogPage onAgregar={actualizarCarrito} />}
+
+      {vista === "carrito" && (
         <CartPage
           onCambio={actualizarCarrito}
           onSeguirComprando={() => setVista("catalogo")}
+          onContinuar={() => setVista("checkout")}
         />
+      )}
+
+      {vista === "checkout" && (
+        <CheckoutPage
+          onPedidoCreado={confirmarPedido}
+          onVolver={() => setVista("carrito")}
+        />
+      )}
+
+      {vista === "confirmacion" && pedido && (
+        <section className="mx-auto max-w-2xl px-4 py-16 text-center">
+          <div className="rounded-2xl bg-white p-10 shadow-sm">
+            <div className="text-5xl">✅</div>
+            <h2 className="mt-4 text-2xl font-semibold text-green-900">
+              ¡Pedido confirmado!
+            </h2>
+            <p className="mt-2 text-green-700">
+              Tu pedido <span className="font-semibold">#{pedido.id}</span> quedó registrado
+              en estado <span className="font-semibold">{pedido.estado}</span>.
+            </p>
+            <p className="mt-1 text-green-900">
+              Total pagado: <span className="font-semibold">{colones(pedido.total)}</span>
+            </p>
+            <button
+              type="button"
+              onClick={() => setVista("catalogo")}
+              className="mt-6 rounded-lg bg-green-800 px-4 py-2 text-sm font-semibold text-white hover:bg-green-900"
+            >
+              Seguir comprando
+            </button>
+          </div>
+        </section>
       )}
     </div>
   );
