@@ -13,18 +13,36 @@ router.get(
   })
 );
 
-// GET /api/productos[?categoria=<id>] — catálogo, con filtro opcional por categoría
+// GET /api/productos?nombre=&categoria=&precioMin=&precioMax=
 router.get(
   "/productos",
   asyncHandler(async (req, res) => {
-    let categoriaId;
+    let categoriaId, precioMin, precioMax;
+    const { nombre } = req.query;
+
     if (req.query.categoria !== undefined) {
       categoriaId = Number(req.query.categoria);
       if (!Number.isInteger(categoriaId) || categoriaId <= 0) {
         return res.status(400).json({ error: "Categoría inválida" });
       }
     }
-    const productos = await listarProductos({ categoriaId });
+    if (req.query.precioMin !== undefined) {
+      precioMin = Number(req.query.precioMin);
+      if (Number.isNaN(precioMin) || precioMin < 0) {
+        return res.status(400).json({ error: "precioMin inválido" });
+      }
+    }
+    if (req.query.precioMax !== undefined) {
+      precioMax = Number(req.query.precioMax);
+      if (Number.isNaN(precioMax) || precioMax < 0) {
+        return res.status(400).json({ error: "precioMax inválido" });
+      }
+    }
+
+    const productos = await listarProductos({ categoriaId, nombre, precioMin, precioMax });
+    if (productos.length === 0) {
+      return res.json({ productos: [], mensaje: "No se encontraron productos" });
+    }
     res.json({ productos });
   })
 );

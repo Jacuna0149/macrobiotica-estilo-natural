@@ -28,3 +28,8 @@ export async function obtenerPerfil(token) {
   const data = await res.json();
   return data.usuario;
 }
+
+export const olvidePassword = (email) => postJSON("/auth/olvide-password", { email });
+
+export const restablecerPassword = (token, password) =>
+  postJSON("/auth/restablecer-password", { token, password });

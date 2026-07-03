@@ -30,3 +30,11 @@ export async function buscarPorId(id) {
   );
   return rows[0] || null;
 }
+
+// Actualiza el password_hash de un usuario (usado en recuperación de contraseña)
+export async function actualizarPassword(usuarioId, passwordHash) {
+  await pool.query(
+    "UPDATE usuarios SET password_hash = $1 WHERE id = $2",
+    [passwordHash, usuarioId]
+  );
+}

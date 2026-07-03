@@ -13,8 +13,18 @@ export async function obtenerCategorias() {
   return categorias;
 }
 
-export async function obtenerProductos(categoriaId) {
-  const query = categoriaId ? `?categoria=${categoriaId}` : "";
+// Acepta un objeto de filtros: { categoriaId, nombre, precioMin, precioMax }
+export async function obtenerProductos(filtros = {}) {
+  const params = new URLSearchParams();
+  if (filtros.categoriaId) params.set("categoria", filtros.categoriaId);
+  if (filtros.nombre) params.set("nombre", filtros.nombre);
+  if (filtros.precioMin !== undefined && filtros.precioMin !== "") {
+    params.set("precioMin", filtros.precioMin);
+  }
+  if (filtros.precioMax !== undefined && filtros.precioMax !== "") {
+    params.set("precioMax", filtros.precioMax);
+  }
+  const query = params.toString() ? `?${params.toString()}` : "";
   const { productos } = await getJSON(`/productos${query}`);
   return productos;
 }

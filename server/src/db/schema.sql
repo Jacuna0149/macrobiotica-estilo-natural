@@ -88,3 +88,15 @@ CREATE TABLE IF NOT EXISTS pedido_items (
 
 CREATE INDEX IF NOT EXISTS idx_pedidos_usuario ON pedidos (usuario_id);
 CREATE INDEX IF NOT EXISTS idx_pedido_items_pedido ON pedido_items (pedido_id);
+
+-- Recuperación de contraseña
+CREATE TABLE IF NOT EXISTS password_resets (
+  id         SERIAL PRIMARY KEY,
+  usuario_id INTEGER NOT NULL REFERENCES usuarios (id) ON DELETE CASCADE,
+  token_hash VARCHAR(255) NOT NULL,
+  expira_en  TIMESTAMPTZ NOT NULL,
+  usado      BOOLEAN NOT NULL DEFAULT false,
+  creado_en  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_password_resets_usuario ON password_resets (usuario_id);

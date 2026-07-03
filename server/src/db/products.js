@@ -8,20 +8,34 @@ export async function listarCategorias() {
   return rows;
 }
 
-// Lista productos activos, opcionalmente filtrados por categoría
-export async function listarProductos({ categoriaId } = {}) {
+// Lista productos activos, con filtros opcionales: categoría, nombre, rango de precio
+export async function listarProductos({ categoriaId, nombre, precioMin, precioMax } = {}) {
   const params = [];
-  let filtro = "WHERE p.activo = true";
+  const condiciones = ["p.activo = true"];
+
   if (categoriaId) {
     params.push(categoriaId);
-    filtro += ` AND p.categoria_id = $${params.length}`;
+    condiciones.push(`p.categoria_id = $${params.length}`);
   }
+  if (nombre) {
+    params.push(`%${nombre}%`);
+    condiciones.push(`(p.nombre ILIKE $${params.length} OR p.descripcion ILIKE $${params.length})`);
+  }
+  if (precioMin !== undefined) {
+    params.push(precioMin);
+    condiciones.push(`p.precio >= $${params.length}`);
+  }
+  if (precioMax !== undefined) {
+    params.push(precioMax);
+    condiciones.push(`p.precio <= $${params.length}`);
+  }
+
   const { rows } = await pool.query(
     `SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.imagen_url,
             p.categoria_id, c.nombre AS categoria
      FROM productos p
      LEFT JOIN categorias c ON c.id = p.categoria_id
-     ${filtro}
+     WHERE ${condiciones.join(" AND ")}
      ORDER BY p.nombre`,
     params
   );
