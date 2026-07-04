@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <section class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white">
+                            <h4><i class="fas fa-right-to-bracket"></i> [[#{plantilla.iniciarSesion}]]</h4>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/login}" method="post" class="was-validated">
+                                <div class="mb-3">
+                                    <label for="username">[[#{login.username}]]</label>
+                                    <input type="text" class="form-control" name="username" id="username" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password">[[#{login.password}]]</label>
+                                    <input type="password" class="form-control" name="password" id="password" required="true"/>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check"></i> [[#{login.login}]]</button>
+                                </div>
+                            </form>
+                            <hr/>
+                            <p class="text-center mb-0">
+                                <a th:href="@{/registro/nuevo}">[[#{plantilla.registrarse}]]</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"/>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>
