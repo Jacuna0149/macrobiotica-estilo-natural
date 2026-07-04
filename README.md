@@ -3,30 +3,41 @@
 ## Descripción
 Sitio web desarrollado para Macrobiótica Estilo Natural, negocio costarricense dedicado a la venta de productos naturales, suplementos alimenticios y artículos de bienestar y cuidado personal.
 
-El sitio permitirá a los clientes explorar el catálogo completo de productos organizado por categorías, consultar información de cada producto y contactar al negocio directamente.
+El sitio permite a los clientes explorar el catálogo de productos organizado por categorías, registrarse e iniciar sesión, agregar productos al carrito y facturar su compra. Incluye además un módulo de administración de categorías y productos.
 
 ## Tecnologías
-- **Frontend:** React + Vite + Tailwind CSS
-- **Backend:** Node.js + Express (API REST)
-- **Base de datos:** PostgreSQL
-- **Autenticación:** JWT (con roles cliente/admin) y hash de contraseñas con bcrypt
+- **Java 21** con **Spring Boot** (Spring MVC, Spring Data JPA)
+- **Thymeleaf** + **Bootstrap 5** (webjars) para las vistas
+- **MySQL** como base de datos
+- **Maven** como gestor de dependencias
+- Contraseñas con hash **BCrypt**; imágenes vía **Firebase Storage**
+- Internacionalización (Español / English)
 
 ## Requisitos previos
-- [Node.js](https://nodejs.org/) LTS (v20 o superior) y npm
-- [PostgreSQL](https://www.postgresql.org/) (v14 o superior)
-- Git
+- [JDK 21](https://adoptium.net/) (Eclipse Temurin recomendado)
+- [Apache Maven](https://maven.apache.org/) 3.9+
+- [MySQL Server](https://dev.mysql.com/downloads/) 8.x (con MySQL Workbench opcional)
+- Git y opcionalmente Apache NetBeans
 
 ## Estructura del proyecto
 ```
 macrobiotica-estilo-natural/
-├── client/   # Frontend (React + Vite + Tailwind)  → http://localhost:5173
-└── server/   # Backend (Node.js + Express + PostgreSQL) → http://localhost:4000
+├── pom.xml                          # proyecto Maven (Spring Boot)
+└── src/main/
+    ├── java/com/tienda/
+    │   ├── controller/              # controladores MVC (index, categoría, producto, carrito, login, registro)
+    │   ├── domain/                  # entidades JPA (Categoria, Producto, Usuario, Rol, Factura, Venta)
+    │   ├── repository/              # repositorios Spring Data JPA
+    │   └── service/                 # servicios de negocio (@Transactional)
+    └── resources/
+        ├── application.properties   # configuración (BD, puerto, firebase)
+        ├── creaTablas.sql           # script de creación de la BD y datos de ejemplo
+        ├── messages*.properties     # textos i18n (es/en)
+        ├── static/                  # css, js, favicons
+        └── templates/               # vistas Thymeleaf
 ```
 
 ## Puesta en marcha (local)
-
-> Cada integrante usa su propia base de datos y su propio archivo `.env` local.
-> Los archivos `.env` **no se suben** al repositorio (están en `.gitignore`).
 
 ### 1. Clonar y actualizar
 ```bash
@@ -36,43 +47,40 @@ git checkout develop && git pull
 ```
 
 ### 2. Crear la base de datos
-Crea una base llamada `macrobiotica` en tu PostgreSQL local (por ejemplo con
-`createdb macrobiotica` o desde pgAdmin).
-
-### 3. Backend
+Ejecuta el script [src/main/resources/creaTablas.sql](src/main/resources/creaTablas.sql) en tu MySQL local
+(desde MySQL Workbench, o por consola):
 ```bash
-cd server
-npm install
-cp .env.example .env          # en Windows: copy .env.example .env
-# Edita server/.env con TUS datos (ver más abajo)
-npm run migrate               # crea las tablas
-npm run seed                  # carga categorías y productos de ejemplo
-npm run dev                   # inicia la API en http://localhost:4000
+mysql -u root -p < src/main/resources/creaTablas.sql
 ```
+El script crea la base `macrobiotica`, el usuario `usuario_prueba` (que usa la aplicación),
+las tablas y los datos de ejemplo.
 
-### 4. Frontend (en otra terminal)
+### 3. Credenciales de Firebase (opcional)
+El archivo de credenciales de Firebase (`src/main/resources/firebase/*.json`) **no se versiona**
+porque contiene una clave privada (GitHub bloquea el push). Pídelo al equipo y colócalo en esa
+carpeta si necesitas la subida de imágenes desde el módulo de administración. Sin el archivo,
+la aplicación funciona igual (solo se deshabilita la subida de imágenes).
+
+### 4. Ejecutar la aplicación
 ```bash
-cd client
-npm install
-cp .env.example .env          # en Windows: copy .env.example .env
-npm run dev                   # inicia la app en http://localhost:5173
+mvn spring-boot:run
 ```
+O desde NetBeans: abrir el proyecto y ejecutar (Run).
 
-## Variables de entorno
+La aplicación queda disponible en **http://localhost** (puerto 80).
 
-**`server/.env`** (a partir de `server/.env.example`):
-| Variable | Descripción | Ejemplo |
-|---|---|---|
-| `PORT` | Puerto del backend | `4000` |
-| `DATABASE_URL` | Conexión a PostgreSQL | `postgresql://postgres:TU_PASSWORD@localhost:5432/macrobiotica` |
-| `JWT_SECRET` | Secreto para firmar los tokens (cadena aleatoria larga) | `una-cadena-larga-aleatoria` |
-| `JWT_EXPIRES_IN` | Vigencia del token | `7d` |
-| `CLIENT_URL` | Origen permitido para CORS | `http://localhost:5173` |
+## Usuarios de prueba
+| Usuario  | Contraseña   | Rol   |
+|----------|--------------|-------|
+| `admin`  | `admin123`   | ADMIN (gestión de categorías y productos) |
+| `cliente`| `cliente123` | USER  |
 
-**`client/.env`** (a partir de `client/.env.example`):
-| Variable | Descripción | Ejemplo |
-|---|---|---|
-| `VITE_API_URL` | URL base de la API | `http://localhost:4000/api` |
+## Funcionalidad
+- **Catálogo** con filtro por categorías (página principal).
+- **Registro e inicio de sesión** de usuarios (BCrypt + roles).
+- **Carrito de compras** en sesión: agregar, cambiar cantidades, eliminar.
+- **Facturación** del carrito (tablas `factura` y `venta`, descuento de existencias). Pago simulado.
+- **Administración** (rol ADMIN): CRUD de categorías y productos.
 
 ## Integrantes del equipo
 - Jeremy Acuña Murillo
