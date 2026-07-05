@@ -28,4 +28,13 @@ public class Venta implements Serializable {
     private BigDecimal precioHistorico;
 
     private Integer cantidad;
+
+    // Subtotal de la línea (precio histórico x cantidad); no se persiste
+    @Transient
+    public BigDecimal getSubtotal() {
+        if (precioHistorico == null || cantidad == null) {
+            return BigDecimal.ZERO;
+        }
+        return precioHistorico.multiply(BigDecimal.valueOf(cantidad));
+    }
 }

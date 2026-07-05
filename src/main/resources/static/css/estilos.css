@@ -1,88 +1,253 @@
+/* Tema Macrobiótica Estilo Natural — basado en el prototipo */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --verde-oscuro: #33502d;
+    --verde-hover: #263d21;
+    --verde-medio: #5c7a52;
+    --verde-suave: #e7eedd;
+    --verde-texto: #45573f;
+    --crema: #f6f3ea;
+    --blanco: #ffffff;
+    --borde: #e4e0d2;
+}
+
 body {
-    background-color: bisque;
-    font-family: serif;
+    background-color: var(--crema);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--verde-texto);
 }
 
-header {
-    position: fixed;
-    background-color: #6666FF;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 90px;
-    padding: 10px;
+.font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
 }
 
-aside {
-    position: fixed;
-    background-color: #99FF99;
-    top: 110px;
-    left: 0;
-    width: 20%;
-    bottom: 20px;
-    padding: 10px;
-}
-section {
-    position: fixed;
-    background-color: #dd8295;
-    top: 110px;
-    left: 20%;
-    width: 80%;
-    bottom: 20px;
-    padding: 10px;
-    overflow-y: scroll;
-}
-footer {
-    position: fixed;
-    background-color: black;
-    color: white;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    bottom: 0;
-    text-align: center;
+h1, h2, h3, .card-header h4 {
+    color: var(--verde-oscuro);
 }
 
-nav {
-    display: flex;
-    justify-content: space-between;
-    margin: 0 10px;
+/* ===== Barra de navegación ===== */
+.navbar {
+    background-color: var(--blanco);
+    border-bottom: 1px solid var(--borde);
+    padding-top: .6rem !important;
+    padding-bottom: .6rem !important;
 }
 
-.logo {
-    font-size: 30px;
-    font-weight: bold;
-    font-family: cursive;
-    line-height: 90px;
+.navbar-brand {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--verde-oscuro) !important;
 }
 
-.nav-link {
+.navbar .nav-link, .navbar .dropdown-toggle {
+    color: var(--verde-texto) !important;
+    font-weight: 500;
+}
+
+.navbar .nav-link:hover {
+    color: var(--verde-oscuro) !important;
+}
+
+/* ===== Botones ===== */
+.btn-primary, .btn-success {
+    background-color: var(--verde-oscuro);
+    border-color: var(--verde-oscuro);
+    border-radius: .65rem;
+    font-weight: 600;
+}
+
+.btn-primary:hover, .btn-success:hover,
+.btn-primary:focus, .btn-success:focus,
+.btn-primary:active, .btn-success:active {
+    background-color: var(--verde-hover) !important;
+    border-color: var(--verde-hover) !important;
+}
+
+.btn-outline-verde {
+    color: var(--verde-oscuro);
+    border: 1px solid var(--verde-oscuro);
+    border-radius: .65rem;
+    font-weight: 600;
+}
+
+.btn-outline-verde:hover {
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
+}
+
+/* ===== Tarjetas ===== */
+.card {
+    border: none;
+    border-radius: 1.15rem;
+    box-shadow: 0 1px 6px rgba(51, 80, 45, .07);
+}
+
+.card-header {
+    background-color: var(--blanco);
+    border-bottom: 1px solid var(--borde);
+    border-radius: 1.15rem 1.15rem 0 0 !important;
+}
+
+.card-header.bg-success, .card-header.bg-info {
+    background-color: var(--verde-oscuro) !important;
+    color: #fff !important;
+}
+
+.card.bg-success {
+    background-color: var(--verde-oscuro) !important;
+}
+
+/* ===== Hero (portada) ===== */
+.hero-badge {
+    background-color: transparent;
+    color: var(--verde-medio);
+    letter-spacing: .25em;
+    font-size: .72rem;
+    font-weight: 600;
+}
+
+.hero-titulo {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--verde-oscuro);
+    font-weight: 600;
+}
+
+.hero-titulo em {
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* ===== Chips de categorías ===== */
+.chip {
+    display: inline-block;
+    padding: .45rem 1.15rem;
+    border-radius: 50rem;
+    background-color: var(--blanco);
+    color: var(--verde-oscuro);
+    border: 1px solid var(--borde);
+    font-size: .9rem;
+    font-weight: 500;
     text-decoration: none;
-    color: white;
+    transition: all .15s ease-in-out;
 }
 
-.nav-menu {
-    list-style: none;
-    display: flex;
-    margin-right: 40px;
+.chip:hover {
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
 }
 
-.nav-menu-item {
-    font-size: 22px;
-    margin: 0 10px;
-    line-height: 90px;
+.chip.active {
+    background-color: var(--verde-oscuro);
+    color: #fff;
+    border-color: var(--verde-oscuro);
 }
 
-.menu-item {
-    padding: 5px;
-    background-color: green;
-    border-radius: 10px;
+/* ===== Tarjetas de producto ===== */
+.producto-card .badge-cat {
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
+    font-weight: 600;
+    border-radius: 50rem;
 }
 
-.menu-item:hover {
-    background-color: black;
+.producto-card img {
+    border-radius: .85rem;
 }
 
+.producto-card .precio {
+    color: var(--verde-oscuro);
+    font-weight: 700;
+    font-size: 1.15rem;
+}
 
+/* ===== Panel resumen (verde oscuro, como el prototipo) ===== */
+.panel-verde {
+    background-color: var(--verde-oscuro);
+    color: #fff;
+    border-radius: 1.15rem;
+}
 
+.panel-verde .btn-claro {
+    background-color: #fff;
+    color: var(--verde-oscuro);
+    border-radius: .65rem;
+    font-weight: 700;
+}
 
+.panel-verde .btn-claro:hover {
+    background-color: var(--verde-suave);
+}
+
+/* ===== Footer ===== */
+footer.bg-info {
+    background-color: var(--verde-oscuro) !important;
+    border-radius: 0;
+}
+
+footer p {
+    margin-bottom: 0;
+    font-size: .9rem;
+}
+
+/* ===== Tablas ===== */
+.table {
+    --bs-table-striped-bg: #faf8f1;
+}
+
+/* ===== Formularios ===== */
+.form-control, .form-select {
+    border-radius: .65rem;
+    border-color: var(--borde);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--verde-medio);
+    box-shadow: 0 0 0 .2rem rgba(92, 122, 82, .15);
+}
+
+label {
+    font-size: .78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--verde-medio);
+    margin-bottom: .25rem;
+}
+
+/* Corazón de favoritos (HU-12) */
+.fav-heart {
+    background: rgba(255, 255, 255, .9);
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    color: #c2c2c2;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .1);
+    transition: color .15s ease, transform .15s ease;
+}
+.fav-heart:hover { transform: scale(1.08); color: #b3452f; }
+.fav-heart.activo { color: #b3452f; }
+
+/* Estados de entrega del pedido (HU-11 y HU-13) */
+.estado-pedido {
+    border-radius: 2rem;
+    padding: .2rem .8rem;
+    font-size: .78rem;
+    font-weight: 600;
+    display: inline-block;
+    background: #eceada;
+    color: var(--verde-texto);
+}
+.estado-pedido.Pendiente  { background: #fdf0d5; color: #8a6d1a; }
+.estado-pedido.Enproceso  { background: #e0eaf6; color: #28527a; }
+.estado-pedido.Enviado    { background: #e7eedd; color: #3f6b2e; }
+.estado-pedido.Entregado  { background: #d6efd8; color: #256c2b; }
+.estado-pedido.Cancelado  { background: #f7ddd6; color: #b3452f; }
+
+/* Impresión de la factura */
+@media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+}

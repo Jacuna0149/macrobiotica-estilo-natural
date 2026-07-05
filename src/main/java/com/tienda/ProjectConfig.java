@@ -62,7 +62,7 @@ public class ProjectConfig implements WebMvcConfigurer {
         registro.addInterceptor(localeChangeInterceptor());
         // rutas de administración protegidas por rol ADMIN
         registro.addInterceptor(adminInterceptor)
-                .addPathPatterns("/categoria/**", "/producto/**");
+                .addPathPatterns("/categoria/**", "/producto/**", "/admin/**");
     }
 
     @Bean("messageSource")

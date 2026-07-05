@@ -67,6 +67,8 @@ public class FacturaService {
         factura.setFecha(LocalDateTime.now());
         factura.setTotal(total);
         factura.setEstado("Pagada");
+        // estado de entrega inicial del pedido (HU-11 y HU-13)
+        factura.setEstadoPedido("Pendiente");
         factura = facturaRepository.save(factura);
 
         // se guardan las ventas asociadas a la factura

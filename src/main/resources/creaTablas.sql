@@ -82,6 +82,10 @@ create table factura (
   fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   total decimal(12,2) check (total>0),
   estado ENUM('Activa', 'Pagada', 'Anulada') NOT NULL,
+  -- Estado de entrega del pedido (HU-11 y HU-13)
+  estado_pedido VARCHAR(20) NULL,
+  -- Motivo cuando el administrador cancela el pedido (HU-13)
+  motivo_cancelacion VARCHAR(255) NULL,
   fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id_factura),
@@ -104,6 +108,19 @@ create table venta (
   UNIQUE (id_factura, id_producto),
   foreign key fk_venta_factura (id_factura) references factura(id_factura),
   foreign key fk_venta_producto (id_producto) references producto(id_producto))
+  ENGINE = InnoDB;
+
+-- Tabla de favoritos (HU-12): relación usuario <-> producto
+create table favorito (
+  id_favorito INT NOT NULL AUTO_INCREMENT,
+  id_usuario INT NOT NULL,
+  id_producto INT NOT NULL,
+  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id_favorito),
+  UNIQUE (id_usuario, id_producto),
+  foreign key fk_favorito_usuario (id_usuario) references usuario(id_usuario),
+  foreign key fk_favorito_producto (id_producto) references producto(id_producto))
   ENGINE = InnoDB;
 
 -- Tabla de roles
@@ -179,6 +196,9 @@ insert into rol (rol) values ('ADMIN'), ('VENDEDOR'), ('USER');
 -- Asignación de roles a usuarios (admin: todos; cliente: USER)
 insert into usuario_rol (id_usuario, id_rol) values
  (1,1), (1,2), (1,3), (2,3);
+
+-- Favoritos de ejemplo del cliente (id_usuario = 2) (HU-12)
+insert into favorito (id_usuario, id_producto) values (2,1), (2,2);
 
 -- Inserción de rutas con roles específicos
 INSERT INTO ruta (ruta, id_rol) VALUES
