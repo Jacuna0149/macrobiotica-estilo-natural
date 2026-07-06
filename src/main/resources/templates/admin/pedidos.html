@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <section class="container py-5">
+            <div class="d-flex justify-content-between align-items-start flex-wrap mb-3">
+                <div>
+                    <h2 class="font-serif mb-1">Gestión de Pedidos</h2>
+                    <p class="text-muted mb-0">Actualiza el estado de las entregas y gestiona las cancelaciones.</p>
+                </div>
+                <span class="badge text-bg-success fs-6 align-self-center">
+                    [[${totalPedidos}]] pedidos</span>
+            </div>
+
+            <!-- Criterio 3: filtrar pedidos por estado -->
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <a th:href="@{/admin/pedidos}" class="chip"
+                   th:classappend="${estadoActual == 'Todos'} ? 'active'">Todos</a>
+                <a th:each="e : ${estados}" th:href="@{/admin/pedidos(estado=${e})}"
+                   class="chip" th:classappend="${estadoActual == e} ? 'active'" th:text="${e}">Estado</a>
+            </div>
+
+            <!-- Criterio 1: ver todos los pedidos -->
+            <div class="card">
+                <div class="card-body p-0">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">N°</th><th>Cliente</th><th>Fecha</th><th>Total</th>
+                                <th>Estado</th><th class="text-end pe-4">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${pedidos == null or pedidos.empty}">
+                                <td colspan="6" class="text-center text-muted py-4">No hay pedidos en este estado.</td>
+                            </tr>
+                            <tr th:each="f : ${pedidos}">
+                                <td class="ps-4 fw-bold">#[[${f.idFactura}]]</td>
+                                <td th:text="${f.usuario != null} ? ${f.usuario.nombre} + ' ' + ${f.usuario.apellidos} : '—'">Cliente</td>
+                                <td>[[${f.fechaCorta}]]</td>
+                                <td class="precio">[[${#numbers.formatCurrency(f.total)}]]</td>
+                                <td>
+                                    <span class="estado-pedido"
+                                          th:classappend="${f.estadoPedido != null} ? ${#strings.replace(f.estadoPedido,' ','')}"
+                                          th:text="${f.estadoPedido}">Estado</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <!-- Criterio 2: cambiar estado -->
+                                    <form th:action="@{/admin/pedidos/estado}" method="post" class="d-inline-flex gap-1 align-items-center">
+                                        <input type="hidden" name="idFactura" th:value="${f.idFactura}"/>
+                                        <select name="nuevoEstado" class="form-select form-select-sm" style="width:auto;"
+                                                th:disabled="${f.estadoPedido == 'Cancelado'}">
+                                            <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"
+                                                    th:selected="${e == f.estadoPedido}">Estado</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-outline-verde btn-sm"
+                                                th:disabled="${f.estadoPedido == 'Cancelado'}" title="Actualizar estado">
+                                            <i class="fas fa-check"></i></button>
+                                    </form>
+                                    <!-- Criterio 4: cancelar pedido -->
+                                    <button type="button" class="btn btn-sm btn-outline-danger btnCancelar"
+                                            th:data-id="${f.idFactura}"
+                                            th:disabled="${f.estadoPedido == 'Cancelado'}"
+                                            data-bs-toggle="modal" data-bs-target="#modalCancelar" title="Cancelar pedido">
+                                        <i class="fas fa-ban"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal cancelar pedido -->
+        <div class="modal fade" id="modalCancelar" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{/admin/pedidos/cancelar}" method="post">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title"><i class="fas fa-ban"></i> Cancelar pedido</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="idFactura" id="cancelarId"/>
+                            <p class="text-muted">Al cancelar se devolverá el stock al inventario y se notificará al cliente.</p>
+                            <label class="form-label">Motivo de la cancelación</label>
+                            <textarea name="motivo" class="form-control" rows="3" required
+                                      placeholder="Ej: falta de stock del proveedor"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-success">Confirmar cancelación</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+
+        <script>
+            document.querySelectorAll('.btnCancelar').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    document.getElementById('cancelarId').value = this.getAttribute('data-id');
+                });
+            });
+        </script>
+    </body>
+</html>

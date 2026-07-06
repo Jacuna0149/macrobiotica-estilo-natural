@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <section class="container py-5">
+            <h2 class="font-serif"><i class="fas fa-bag-shopping"></i> Mis Pedidos</h2>
+            <p class="text-muted">Historial y seguimiento de tus compras.</p>
+
+            <!-- Criterio 3: sin pedidos registrados -->
+            <div th:if="${pedidos == null or pedidos.empty}" class="card text-center p-5 mt-3">
+                <div>
+                    <i class="fas fa-leaf fa-2x mb-3 text-success"></i>
+                    <h5>Aún no tienes pedidos, explora nuestro catálogo</h5>
+                    <a th:href="@{/}" class="btn btn-success mt-2">Explorar catálogo</a>
+                </div>
+            </div>
+
+            <!-- Criterio 1: lista de pedidos -->
+            <div th:unless="${pedidos == null or pedidos.empty}" class="card mt-3">
+                <div class="card-body p-0">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="ps-4">N° Orden</th>
+                                <th>Fecha</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th class="text-end pe-4">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="f : ${pedidos}">
+                                <td class="ps-4 fw-bold">#[[${f.idFactura}]]</td>
+                                <td>[[${f.fechaCorta}]]</td>
+                                <td class="precio">[[${#numbers.formatCurrency(f.total)}]]</td>
+                                <td>
+                                    <span class="estado-pedido"
+                                          th:classappend="${f.estadoPedido != null} ? ${#strings.replace(f.estadoPedido,' ','')}"
+                                          th:text="${f.estadoPedido}">Estado</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a th:href="@{/pedidos/{id}(id=${f.idFactura})}" class="btn btn-outline-verde btn-sm">
+                                        <i class="fas fa-eye"></i> Detalle</a>
+                                    <a th:href="@{/pedidos/{id}/factura(id=${f.idFactura})}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-file-pdf"></i> Factura</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section th:replace="~{general/fragmentos :: mostrarToast}"></section>
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>

@@ -1,21 +1,47 @@
-# Dependencias
-node_modules/
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Variables de entorno (NO subir secretos)
-.env
-.env.local
-.env.*.local
-
-# Builds
-dist/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Logs
-*.log
-npm-debug.log*
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
 
-# Editor / SO
+### Eclipse / STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### VS Code ###
 .vscode/
-.idea/
+
+### SO ###
 .DS_Store
 Thumbs.db
+
+### Logs ###
+*.log
+
+### Credenciales (no versionar secretos) ###
+src/main/resources/firebase/*.json
+
+### Scripts locales de arranque (rutas propias de cada máquina) ###
+run-dev.cmd
+run-dev.sh
