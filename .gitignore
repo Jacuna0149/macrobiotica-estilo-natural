@@ -41,3 +41,7 @@ Thumbs.db
 
 ### Credenciales (no versionar secretos) ###
 src/main/resources/firebase/*.json
+
+### Scripts locales de arranque (rutas propias de cada máquina) ###
+run-dev.cmd
+run-dev.sh

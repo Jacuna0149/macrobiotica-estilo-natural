@@ -39,35 +39,44 @@ macrobiotica-estilo-natural/
 
 ## Puesta en marcha (local)
 
-### 1. Clonar y actualizar
+### 1. Clonar
 ```bash
 git clone https://github.com/Jacuna0149/macrobiotica-estilo-natural.git
 cd macrobiotica-estilo-natural
-git checkout develop && git pull
 ```
+La rama `main` ya trae el proyecto Spring Boot listo. Requiere **JDK 21** y **Maven 3.9+**
+(comprueba con `java -version` y `mvn -v`).
 
-### 2. Crear la base de datos
-Ejecuta el script [src/main/resources/creaTablas.sql](src/main/resources/creaTablas.sql) en tu MySQL local
-(desde MySQL Workbench, o por consola):
+### 2. Ejecutar
+
+**Opción A — Demo rápida sin base de datos (recomendada para probar).**
+Usa una base **H2 en memoria** que se autocrea y carga datos de ejemplo; no necesitas MySQL:
 ```bash
-mysql -u root -p < src/main/resources/creaTablas.sql
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
-El script crea la base `macrobiotica`, el usuario `usuario_prueba` (que usa la aplicación),
-las tablas y los datos de ejemplo.
+Queda en **http://localhost:8080** (consola H2 en `/h2-console`).
+
+**Opción B — Con MySQL (entorno completo).**
+1. Ejecuta el script [src/main/resources/creaTablas.sql](src/main/resources/creaTablas.sql)
+   en tu MySQL local (crea la base `macrobiotica`, el usuario `usuario_prueba`, las tablas y datos):
+   ```bash
+   mysql -u root -p < src/main/resources/creaTablas.sql
+   ```
+   > Si ya tenías la base de una versión anterior, aplica también
+   > [src/main/resources/actualizacion_HU.sql](src/main/resources/actualizacion_HU.sql).
+2. Arranca la app:
+   ```bash
+   mvn spring-boot:run
+   ```
+   Queda en **http://localhost** (puerto 80).
+
+Desde NetBeans: abrir el proyecto **Maven** (la carpeta raíz) y ejecutar (Run).
 
 ### 3. Credenciales de Firebase (opcional)
 El archivo de credenciales de Firebase (`src/main/resources/firebase/*.json`) **no se versiona**
-porque contiene una clave privada (GitHub bloquea el push). Pídelo al equipo y colócalo en esa
-carpeta si necesitas la subida de imágenes desde el módulo de administración. Sin el archivo,
-la aplicación funciona igual (solo se deshabilita la subida de imágenes).
-
-### 4. Ejecutar la aplicación
-```bash
-mvn spring-boot:run
-```
-O desde NetBeans: abrir el proyecto y ejecutar (Run).
-
-La aplicación queda disponible en **http://localhost** (puerto 80).
+porque contiene una clave privada. Pídelo al equipo y colócalo en esa carpeta si necesitas la
+subida de imágenes desde el módulo de administración. **Sin el archivo la aplicación arranca
+igual** (solo se deshabilita la subida de imágenes).
 
 ## Usuarios de prueba
 | Usuario  | Contraseña   | Rol   |
@@ -80,7 +89,9 @@ La aplicación queda disponible en **http://localhost** (puerto 80).
 - **Registro e inicio de sesión** de usuarios (BCrypt + roles).
 - **Carrito de compras** en sesión: agregar, cambiar cantidades, eliminar.
 - **Facturación** del carrito (tablas `factura` y `venta`, descuento de existencias). Pago simulado.
-- **Administración** (rol ADMIN): CRUD de categorías y productos.
+- **Historial de pedidos** del cliente con detalle y factura imprimible (HU-11).
+- **Lista de favoritos** del cliente (HU-12).
+- **Administración** (rol ADMIN): CRUD de categorías y productos, y **gestión del estado de los pedidos** (ver, filtrar, cambiar estado y cancelar con devolución de stock, HU-13).
 
 ## Integrantes del equipo
 - Jeremy Acuña Murillo
