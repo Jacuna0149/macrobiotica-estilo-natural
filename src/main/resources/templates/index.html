@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <!-- Hero de portada, según el prototipo -->
+        <section class="container text-center pt-5 pb-3">
+            <span class="hero-badge text-uppercase">&mdash; [[#{index.hero.badge}]] &mdash;</span>
+            <h1 class="hero-titulo display-5 mt-3">
+                [[#{index.hero.titulo1}]] <em>[[#{index.hero.titulo2}]]</em>
+            </h1>
+            <p class="lead mx-auto mt-3" style="max-width: 640px;">[[#{index.hero.subtitulo}]]</p>
+            <a href="#catalogo" class="btn btn-success px-4 py-2 mt-2">[[#{index.explorar}]]</a>
+        </section>
+
+        <!-- Título del catálogo -->
+        <section id="catalogo" class="container text-center pt-4">
+            <h2 class="font-serif">[[#{index.catalogo}]]</h2>
+            <p class="mx-auto" style="max-width: 620px;">[[#{index.catalogo.subtitulo}]]</p>
+        </section>
+
+        <section th:replace="~{consultas/fragmentos :: tabs}"/>
+        <section th:replace="~{consultas/fragmentos :: tarjetas}"/>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"/>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>

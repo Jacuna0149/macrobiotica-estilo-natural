@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"></head>
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"></header>
+
+        <section class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white">
+                            <h4><i class="fas fa-user-plus"></i> [[#{registro.titulo}]]</h4>
+                            <small>[[#{registro.subtitulo}]]</small>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/registro/guardar}" th:object="${usuario}" method="post" class="was-validated">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nombre">[[#{usuario.nombre}]]</label>
+                                        <input type="text" class="form-control" name="nombre" th:field="*{nombre}" maxlength="20" required="true"/>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="apellidos">[[#{usuario.apellidos}]]</label>
+                                        <input type="text" class="form-control" name="apellidos" th:field="*{apellidos}" maxlength="30" required="true"/>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="correo">[[#{usuario.correo}]]</label>
+                                    <input type="email" class="form-control" name="correo" th:field="*{correo}" maxlength="75" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefono">[[#{usuario.telefono}]]</label>
+                                    <input type="text" class="form-control" name="telefono" th:field="*{telefono}" maxlength="25"/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="username">[[#{usuario.username}]]</label>
+                                        <input type="text" class="form-control" name="username" th:field="*{username}" maxlength="30" required="true"/>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="password">[[#{usuario.password}]]</label>
+                                        <input type="password" class="form-control" name="password" minlength="8" required="true"/>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check"></i> [[#{accion.registrar}]]</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section th:replace="~{general/fragmentos :: mostrarToast}"/>
+
+        <footer th:replace="~{general/fragmentos :: footer}"></footer>
+    </body>
+</html>
