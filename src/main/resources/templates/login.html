@@ -19,7 +19,10 @@
                                     <input type="text" class="form-control" name="username" id="username" required="true"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="password">[[#{login.password}]]</label>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label for="password">[[#{login.password}]]</label>
+                                        <a th:href="@{/olvide-password}" class="small">[[#{recuperacion.olvidasteContrasena}]]</a>
+                                    </div>
                                     <input type="password" class="form-control" name="password" id="password" required="true"/>
                                 </div>
                                 <div class="d-grid mt-4">

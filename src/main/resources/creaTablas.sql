@@ -167,6 +167,18 @@ CREATE TABLE constante (
     UNIQUE (atributo))
     ENGINE = InnoDB;
 
+-- Tabla de recuperar contraseña
+CREATE TABLE solicitud_recuperacion (
+  id_solicitud INT AUTO_INCREMENT PRIMARY KEY,
+  id_usuario   INT NOT NULL,
+  token_hash   VARCHAR(255) NOT NULL,
+  expira_en    DATETIME NOT NULL,
+  usado        BOOLEAN NOT NULL DEFAULT FALSE,
+  creado_en    DATETIME NOT NULL,
+  CONSTRAINT fk_solicitud_usuario FOREIGN KEY (id_usuario)
+      REFERENCES usuario(id_usuario) ON DELETE CASCADE
+);
+
 -- --- Sección de Inserción de Datos ---
 -- Inserción de usuarios (claves: admin -> admin123 ; cliente -> cliente123)
 INSERT INTO usuario (username,password,nombre, apellidos, correo, telefono,ruta_imagen,activo) VALUES

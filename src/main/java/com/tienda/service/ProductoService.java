@@ -72,4 +72,11 @@ public class ProductoService {
             throw new IllegalStateException("no se elimina por que tiene datos asociados", e);
         }
     }
+    
+    @Transactional(readOnly = true)
+public List<Producto> buscarConFiltros(String nombre, Integer idCategoria, Double precioMin, Double precioMax) {
+    String nombreFiltro = (nombre == null || nombre.isBlank()) ? null : nombre.trim();
+    return productoRepository.buscarConFiltros(nombreFiltro, idCategoria, precioMin, precioMax);
+}
+
 }

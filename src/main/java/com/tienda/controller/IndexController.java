@@ -1,23 +1,21 @@
 package com.tienda.controller;
 
-import com.tienda.domain.Categoria;
 import com.tienda.domain.Usuario;
 import com.tienda.service.CategoriaService;
 import com.tienda.service.FavoritoService;
 import com.tienda.service.ProductoService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class IndexController {
 
-    //para enlazar el servicio de la producto
     private final ProductoService productoService;
     private final CategoriaService categoriaService;
     private final FavoritoService favoritoService;
@@ -30,35 +28,44 @@ public class IndexController {
     }
 
     @GetMapping("/")
-    public String mostrarIndex(Model model, HttpSession session){
-        var productos = productoService.getProductos(true);
+    public String mostrarIndex(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Double precioMin,
+            @RequestParam(required = false) Double precioMax,
+            Model model, HttpSession session) {
+
+        var productos = productoService.buscarConFiltros(nombre, null, precioMin, precioMax);
         model.addAttribute("productos", productos);
         var categorias = categoriaService.getCategorias(true);
         model.addAttribute("categorias", categorias);
         model.addAttribute("idsFavoritos", idsFavoritos(session));
+
+        model.addAttribute("nombre", nombre);
+        model.addAttribute("precioMin", precioMin);
+        model.addAttribute("precioMax", precioMax);
         return "/index";
     }
 
-
     @GetMapping("/consultas/{idCategoria}")
-    public String listado (@PathVariable("idCategoria") Integer idCategoria,
-            Model model, HttpSession session){
-        Optional<Categoria> categoriaOpt = categoriaService.getCategoria(idCategoria);
-        if(categoriaOpt.isEmpty()) { //si no lo encontraron...
-           model.addAttribute("productos",java.util.Collections.EMPTY_LIST);
-        } else {
-            var categoria = categoriaOpt.get();
-            var productos = categoria.getProductos();
-            model.addAttribute("productos", productos);
-        }
+    public String listado(@PathVariable("idCategoria") Integer idCategoria,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Double precioMin,
+            @RequestParam(required = false) Double precioMax,
+            Model model, HttpSession session) {
+
+        var productos = productoService.buscarConFiltros(nombre, idCategoria, precioMin, precioMax);
+        model.addAttribute("productos", productos);
         var categorias = categoriaService.getCategorias(true);
         model.addAttribute("categorias", categorias);
         model.addAttribute("categoriaSel", idCategoria);
         model.addAttribute("idsFavoritos", idsFavoritos(session));
+
+        model.addAttribute("nombre", nombre);
+        model.addAttribute("precioMin", precioMin);
+        model.addAttribute("precioMax", precioMax);
         return "/index";
     }
 
-    // Conjunto de ids favoritos del usuario en sesión (vacío si no hay sesión)
     private Set<Integer> idsFavoritos(HttpSession session) {
         var usuario = (Usuario) session.getAttribute("usuarioSesion");
         if (usuario == null) {

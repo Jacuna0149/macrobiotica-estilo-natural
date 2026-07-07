@@ -10,6 +10,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
 
     // consulta derivada para recuperar un usuario por su username
     public Optional<Usuario> findByUsername(String username);
+    public Optional<Usuario> findByCorreo(String correo);
 
     // consultas derivadas para validar unicidad en el registro
     public boolean existsByUsername(String username);
